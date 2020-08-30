@@ -1,0 +1,91 @@
+#include <assert.h>
+#include <limits.h>
+#include <math.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// swap of the numbers
+void swap(int* xp, int* yp) 
+{ 
+    int temp = *xp; 
+    *xp = *yp; 
+    *yp = temp; 
+} 
+// least value of the two integers
+int minimum(int x, int y) 
+{ 
+        return ((x + y - abs(x - y)) / 2); 
+} 
+  
+// function for minimum cost of the boat transport
+int minimumCost(int cost[], int n) 
+{ 
+  
+     int i, j, min_idx; 
+  
+    // One by one move boundary of unsorted subarray 
+    for (i = 0; i < n - 1; i++) { 
+  
+        // Find the minimum element in unsorted array 
+        min_idx = i; 
+        for (j = i + 1; j < n; j++) 
+            if (cost[j] < cost[min_idx]) 
+                min_idx = j; 
+  
+        // Swap the found minimum element 
+        // with the first element 
+        swap(&cost[min_idx], &cost[i]); 
+    } 
+
+    int totalCost = 0; 
+    for (int i = n - 1; i > 1; i -= 2) { 
+        if (i == 2) { 
+            totalCost += cost[2] + cost[0]; 
+        } 
+        else { 
+  
+            int cost_first = cost[i] + cost[0] + 2 * cost[1]; 
+            int cost_second = cost[i] + cost[i - 1] + 2 * cost[0]; 
+            totalCost += minimum(cost_first,cost_second); 
+        } 
+    } 
+  
+    // Calculate the minimum cost
+    // of the two cheapest person 
+    if (n == 1) { 
+        totalCost += cost[0]; 
+    } 
+    else { 
+        totalCost += cost[1]; 
+    } 
+  
+    return totalCost; 
+} 
+  
+ 
+int main() 
+{ 
+    int total[1000];
+    int p = 0;
+int testcases;
+scanf("%d",&testcases);
+ for(int k=0;k<testcases;k++){
+ int persons;
+ scanf("%d",&persons);
+ int cost[persons];
+ for(int i=0; i< persons; i++){
+     scanf("%d",&cost[i]);
+ }
+    int n = sizeof(cost) / sizeof(cost[0]); 
+//storing all the costs in single array
+    total[p] = minimumCost(cost, n);
+    p++; 
+ }
+
+ for(int i=0;i<p;i++){
+     printf("%d\n",total[i]);
+ }
+ return 0;
+} 
